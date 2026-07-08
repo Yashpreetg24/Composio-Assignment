@@ -1,28 +1,31 @@
 import json
 import logging
+import os
 import time
-from typing import Optional, Dict, Any
+from typing import Optional
+
 import requests
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 from googlesearch import search
 from openai import OpenAI
-import os
-from dotenv import load_dotenv
+from pydantic import ValidationError
 
 from schema import AppResearchResult
-from pydantic import ValidationError
 
 load_dotenv()
 
 # Setup logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 # Initialize clients
 openai_client = OpenAI(
-    api_key=os.getenv("GROQ_API_KEY"),
-    base_url="https://api.groq.com/openai/v1"
+    api_key=os.getenv("GROQ_API_KEY"), base_url="https://api.groq.com/openai/v1"
 )
+
 
 def search_for_docs_url(app_name: str, hint: str) -> Optional[str]:
     """Search for the API documentation URL using DuckDuckGo."""
@@ -35,6 +38,7 @@ def search_for_docs_url(app_name: str, hint: str) -> Optional[str]:
         logger.warning(f"Search failed for {app_name}: {e}")
     return None
 
+
 def fetch_page_text(url: str) -> str:
     """Fetch the webpage and extract its text."""
     try:
@@ -43,20 +47,23 @@ def fetch_page_text(url: str) -> str:
         }
         response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()
-        soup = BeautifulSoup(response.content, 'html.parser')
-        
+        soup = BeautifulSoup(response.content, "html.parser")
+
         # Remove script and style elements
         for script in soup(["script", "style", "nav", "footer"]):
             script.decompose()
-            
-        text = soup.get_text(separator=' ', strip=True)
+
+        text = soup.get_text(separator=" ", strip=True)
         # Limit text length to avoid token limits (Claude 3.5 Sonnet has 200k context, but we keep it reasonable)
         return text[:20000]
     except Exception as e:
         logger.warning(f"Failed to fetch {url}: {e}")
         return ""
 
-def analyze_with_llm(app_data: dict, docs_text: str, evidence_url: str) -> AppResearchResult:
+
+def analyze_with_llm(
+    app_data: dict, docs_text: str, evidence_url: str
+) -> AppResearchResult:
     """Use Anthropic to analyze the docs text and extract structured information."""
     prompt = f"""
     You are an expert API researcher. Your task is to analyze the provided documentation text for an app and extract specific structured information.
@@ -85,7 +92,7 @@ def analyze_with_llm(app_data: dict, docs_text: str, evidence_url: str) -> AppRe
         "needs_human_review": false // boolean, true if you couldn't find clear info
     }}
     """
-    
+
     if not docs_text:
         # If we couldn't fetch text, still let LLM try based on just the name/hint or return needs_human_review
         prompt = f"""
@@ -97,10 +104,8 @@ def analyze_with_llm(app_data: dict, docs_text: str, evidence_url: str) -> AppRe
     def _call_llm(current_prompt):
         resp = openai_client.chat.completions.create(
             model="llama-3.3-70b-versatile",
-            response_format={ "type": "json_object" },
-            messages=[
-                {"role": "user", "content": current_prompt}
-            ],
+            response_format={"type": "json_object"},
+            messages=[{"role": "user", "content": current_prompt}],
             temperature=0,
             max_tokens=1024,
         )
@@ -111,52 +116,60 @@ def analyze_with_llm(app_data: dict, docs_text: str, evidence_url: str) -> AppRe
         try:
             return AppResearchResult(**data)
         except ValidationError as ve:
-            logger.warning(f"Validation failed for {app_data['app']}, retrying... Error: {ve}")
-            retry_prompt = prompt + "\n\nWARNING: Your previous response failed validation. Make sure self_serve is STRICTLY ONE OF: 'self-serve', 'gated-paid', 'gated-approval', 'gated-partnership' and buildability_verdict is STRICTLY ONE OF: 'buildable-now', 'buildable-with-friction', 'not-buildable'."
+            logger.warning(
+                f"Validation failed for {app_data['app']}, retrying... Error: {ve}"
+            )
+            retry_prompt = (
+                prompt
+                + "\n\nWARNING: Your previous response failed validation. Make sure self_serve is STRICTLY ONE OF: 'self-serve', 'gated-paid', 'gated-approval', 'gated-partnership' and buildability_verdict is STRICTLY ONE OF: 'buildable-now', 'buildable-with-friction', 'not-buildable'."
+            )
             data2 = _call_llm(retry_prompt)
             try:
                 return AppResearchResult(**data2)
             except ValidationError as ve2:
-                logger.error(f"Validation failed again for {app_data['app']}, falling back.")
+                logger.error(
+                    f"Validation failed again for {app_data['app']}, falling back."
+                )
                 # Fallback on the returned data but fix the strict fields
-                data2['self_serve'] = 'gated-approval'
-                data2['buildability_verdict'] = 'buildable-with-friction'
-                data2['confidence'] = 'low'
-                data2['needs_human_review'] = True
-                data2['verdict_reason'] = f"Validation fallback: {ve2}"
+                data2["self_serve"] = "gated-approval"
+                data2["buildability_verdict"] = "buildable-with-friction"
+                data2["confidence"] = "low"
+                data2["needs_human_review"] = True
+                data2["verdict_reason"] = f"Validation fallback: {ve2}"
                 return AppResearchResult(**data2)
-        
+
     except Exception as e:
         logger.error(f"LLM extraction failed for {app_data['app']}: {e}")
         # Return a fallback result
         return AppResearchResult(
-            id=app_data['id'],
-            category=app_data['category'],
-            app=app_data['app'],
+            id=app_data["id"],
+            category=app_data["category"],
+            app=app_data["app"],
             description="Failed to extract",
             auth_methods=[],
-            self_serve="gated-partnership", # Safe fallback
+            self_serve="gated-partnership",  # Safe fallback
             api_surface="Unknown due to extraction error",
             buildability_verdict="not-buildable",
             verdict_reason=f"Error during analysis: {str(e)}",
             evidence_url=evidence_url if evidence_url else "",
             confidence="low",
-            needs_human_review=True
+            needs_human_review=True,
         )
+
 
 def research_app(app_data: dict) -> AppResearchResult:
     """End-to-end research for a single app."""
     logger.info(f"Researching [{app_data['id']}] {app_data['app']}...")
-    
-    evidence_url = search_for_docs_url(app_data['app'], app_data['hint'])
-    
+
+    evidence_url = search_for_docs_url(app_data["app"], app_data["hint"])
+
     docs_text = ""
     if evidence_url:
         docs_text = fetch_page_text(evidence_url)
-    
+
     result = analyze_with_llm(app_data, docs_text, evidence_url or "")
-    
+
     # Simple rate limiting for DuckDuckGo and Anthropic
     time.sleep(2)
-    
+
     return result
