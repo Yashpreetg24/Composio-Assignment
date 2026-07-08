@@ -10,6 +10,7 @@ import os
 from dotenv import load_dotenv
 
 from schema import AppResearchResult
+from pydantic import ValidationError
 
 load_dotenv()
 
@@ -93,20 +94,37 @@ def analyze_with_llm(app_data: dict, docs_text: str, evidence_url: str) -> AppRe
         Evidence URL: {evidence_url if evidence_url else 'None found'}
         """ + prompt
 
-    try:
-        response = openai_client.chat.completions.create(
+    def _call_llm(current_prompt):
+        resp = openai_client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             response_format={ "type": "json_object" },
             messages=[
-                {"role": "user", "content": prompt}
+                {"role": "user", "content": current_prompt}
             ],
             temperature=0,
             max_tokens=1024,
         )
-        
-        content = response.choices[0].message.content.strip()
-        data = json.loads(content)
-        return AppResearchResult(**data)
+        return json.loads(resp.choices[0].message.content.strip())
+
+    try:
+        data = _call_llm(prompt)
+        try:
+            return AppResearchResult(**data)
+        except ValidationError as ve:
+            logger.warning(f"Validation failed for {app_data['app']}, retrying... Error: {ve}")
+            retry_prompt = prompt + "\n\nWARNING: Your previous response failed validation. Make sure self_serve is STRICTLY ONE OF: 'self-serve', 'gated-paid', 'gated-approval', 'gated-partnership' and buildability_verdict is STRICTLY ONE OF: 'buildable-now', 'buildable-with-friction', 'not-buildable'."
+            data2 = _call_llm(retry_prompt)
+            try:
+                return AppResearchResult(**data2)
+            except ValidationError as ve2:
+                logger.error(f"Validation failed again for {app_data['app']}, falling back.")
+                # Fallback on the returned data but fix the strict fields
+                data2['self_serve'] = 'gated-approval'
+                data2['buildability_verdict'] = 'buildable-with-friction'
+                data2['confidence'] = 'low'
+                data2['needs_human_review'] = True
+                data2['verdict_reason'] = f"Validation fallback: {ve2}"
+                return AppResearchResult(**data2)
         
     except Exception as e:
         logger.error(f"LLM extraction failed for {app_data['app']}: {e}")
