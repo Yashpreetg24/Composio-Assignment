@@ -1560,11 +1560,11 @@
     ],
     "self_serve": "self-serve",
     "api_surface": "No clear information on public REST/GraphQL API",
-    "buildability_verdict": "not-buildable",
+    "buildability_verdict": "buildable-now",
     "verdict_reason": "Lack of clear API documentation",
-    "evidence_url": "",
-    "confidence": "low",
-    "needs_human_review": true
+    "evidence_url": "https://developers.fathom.ai/quickstart",
+    "confidence": "high",
+    "needs_human_review": false
   },
   {
     "id": 94,
@@ -1606,11 +1606,11 @@
     "auth_methods": [],
     "self_serve": "gated-approval",
     "api_surface": "No public API documentation found",
-    "buildability_verdict": "not-buildable",
+    "buildability_verdict": "buildable-now",
     "verdict_reason": "No documentation or evidence URL available",
-    "evidence_url": "",
-    "confidence": "low",
-    "needs_human_review": true
+    "evidence_url": "https://docs.devin.ai/work-with-devin/devin-mcp",
+    "confidence": "high",
+    "needs_human_review": false
   },
   {
     "id": 97,

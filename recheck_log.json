@@ -1,0 +1,189 @@
+[
+  {
+    "id": 4,
+    "app": "Attio",
+    "verdict_changed": true,
+    "confidence_changed": true,
+    "old_verdict": "not-buildable",
+    "new_verdict": "buildable-now",
+    "old_confidence": "low",
+    "new_confidence": "high",
+    "new_evidence_url": "https://attio.com/docs"
+  },
+  {
+    "id": 15,
+    "app": "Pylon",
+    "verdict_changed": false,
+    "confidence_changed": false,
+    "old_verdict": "buildable-with-friction",
+    "new_verdict": "buildable-with-friction",
+    "old_confidence": "low",
+    "new_confidence": "low",
+    "new_evidence_url": "None found"
+  },
+  {
+    "id": 17,
+    "app": "Plain",
+    "verdict_changed": true,
+    "confidence_changed": true,
+    "old_verdict": "not-buildable",
+    "new_verdict": "buildable-now",
+    "old_confidence": "low",
+    "new_confidence": "high",
+    "new_evidence_url": "https://plain.com/docs"
+  },
+  {
+    "id": 37,
+    "app": "systeme.io",
+    "verdict_changed": false,
+    "confidence_changed": false,
+    "old_verdict": "buildable-with-friction",
+    "new_verdict": "buildable-with-friction",
+    "old_confidence": "low",
+    "new_confidence": "low",
+    "new_evidence_url": ""
+  },
+  {
+    "id": 50,
+    "app": "fanbasis",
+    "verdict_changed": false,
+    "confidence_changed": false,
+    "old_verdict": "not-buildable",
+    "new_verdict": "not-buildable",
+    "old_confidence": "low",
+    "new_confidence": "low",
+    "new_evidence_url": ""
+  },
+  {
+    "id": 54,
+    "app": "MrScraper",
+    "verdict_changed": false,
+    "confidence_changed": false,
+    "old_verdict": "not-buildable",
+    "new_verdict": "not-buildable",
+    "old_confidence": "low",
+    "new_confidence": "low",
+    "new_evidence_url": ""
+  },
+  {
+    "id": 56,
+    "app": "Firecrawl",
+    "verdict_changed": true,
+    "confidence_changed": true,
+    "old_verdict": "buildable-with-friction",
+    "new_verdict": "buildable-now",
+    "old_confidence": "low",
+    "new_confidence": "high",
+    "new_evidence_url": "https://firecrawl.dev/docs"
+  },
+  {
+    "id": 59,
+    "app": "Waterfall.io",
+    "verdict_changed": true,
+    "confidence_changed": false,
+    "old_verdict": "not-buildable",
+    "new_verdict": "buildable-with-friction",
+    "old_confidence": "low",
+    "new_confidence": "low",
+    "new_evidence_url": ""
+  },
+  {
+    "id": 85,
+    "app": "iPayX",
+    "verdict_changed": false,
+    "confidence_changed": false,
+    "old_verdict": "not-buildable",
+    "new_verdict": "not-buildable",
+    "old_confidence": "low",
+    "new_confidence": "low",
+    "new_evidence_url": ""
+  },
+  {
+    "id": 90,
+    "app": "PitchBook",
+    "verdict_changed": false,
+    "confidence_changed": true,
+    "old_verdict": "buildable-with-friction",
+    "new_verdict": "buildable-with-friction",
+    "old_confidence": "low",
+    "new_confidence": "medium",
+    "new_evidence_url": "https://pitchbook.com/"
+  },
+  {
+    "id": 91,
+    "app": "NotebookLM",
+    "verdict_changed": false,
+    "confidence_changed": true,
+    "old_verdict": "buildable-now",
+    "new_verdict": "buildable-now",
+    "old_confidence": "low",
+    "new_confidence": "high",
+    "new_evidence_url": "https://cloud.google.com/docs"
+  },
+  {
+    "id": 93,
+    "app": "Fathom",
+    "verdict_changed": false,
+    "confidence_changed": false,
+    "old_verdict": "not-buildable",
+    "new_verdict": "not-buildable",
+    "old_confidence": "low",
+    "new_confidence": "low",
+    "new_evidence_url": ""
+  },
+  {
+    "id": 94,
+    "app": "Consensus",
+    "verdict_changed": false,
+    "confidence_changed": false,
+    "old_verdict": "not-buildable",
+    "new_verdict": "not-buildable",
+    "old_confidence": "low",
+    "new_confidence": "low",
+    "new_evidence_url": ""
+  },
+  {
+    "id": 95,
+    "app": "Reducto",
+    "verdict_changed": true,
+    "confidence_changed": true,
+    "old_verdict": "buildable-with-friction",
+    "new_verdict": "buildable-now",
+    "old_confidence": "low",
+    "new_confidence": "high",
+    "new_evidence_url": "https://reducto.ai/docs"
+  },
+  {
+    "id": 96,
+    "app": "Devin",
+    "verdict_changed": false,
+    "confidence_changed": false,
+    "old_verdict": "not-buildable",
+    "new_verdict": "not-buildable",
+    "old_confidence": "low",
+    "new_confidence": "low",
+    "new_evidence_url": ""
+  },
+  {
+    "id": 97,
+    "app": "higgsfield",
+    "verdict_changed": false,
+    "confidence_changed": false,
+    "old_verdict": "not-buildable",
+    "new_verdict": "not-buildable",
+    "old_confidence": "low",
+    "new_confidence": "low",
+    "new_evidence_url": ""
+  },
+  {
+    "id": 100,
+    "app": "Grain",
+    "verdict_changed": true,
+    "confidence_changed": true,
+    "old_verdict": "not-buildable",
+    "new_verdict": "buildable-now",
+    "old_confidence": "low",
+    "new_confidence": "high",
+    "new_evidence_url": "https://developers.grain.com"
+  }
+]
