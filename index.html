@@ -256,7 +256,7 @@
         <h2>The Agent Architecture</h2>
         <p>This dataset was generated using a custom automated pipeline that searches for documentation, fetches the HTML, and uses an LLM (Groq / Llama 3.3 70B) to extract structured JSON against a strict Pydantic schema.</p>
         <p style="margin-top: 1rem;">
-            <strong>GitHub Repository:</strong> <a href="{{REPO_URL}}" target="_blank">{{REPO_URL}}</a>
+            <strong>GitHub Repository:</strong> <a href="https://github.com/Yashpreetg24/Composio-Assignment" target="_blank">https://github.com/Yashpreetg24/Composio-Assignment</a>
         </p>
         <div style="margin-top: 1.5rem; padding: 1rem; border-left: 3px solid var(--primary); background: rgba(59, 130, 246, 0.1);">
             <strong>A note on process honesty:</strong> The initial run failed on 100% of rows due to an empty Anthropic API credit balance. The pipeline caught the error gracefully. On the second run (switched to Groq), it succeeded on 95/100. The remaining 5 rows failed strict Pydantic enum validation ("unknown" instead of allowed values), which prompted the addition of a resilient retry loop.
