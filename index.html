@@ -6,19 +6,22 @@
     <title>Researching 100 Apps as Agent-Callable Tools</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
         :root {
-            --bg: #09090b;
-            --surface: #18181b;
-            --surface-hover: #27272a;
-            --border: #27272a;
-            --text: #fafafa;
-            --text-muted: #a1a1aa;
+            --bg-base: #050505;
+            --surface-glass: rgba(255, 255, 255, 0.03);
+            --surface-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
             --primary: #3b82f6;
-            --primary-hover: #60a5fa;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --accent1: #8b5cf6;
+            --accent2: #ec4899;
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
-            --radius: 12px;
+            --radius: 16px;
         }
 
         * {
@@ -28,43 +31,74 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
             line-height: 1.6;
-            padding: 2rem;
+            padding: 3rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Mesh Background Gradient */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 30%),
+                radial-gradient(circle at 20% 80%, rgba(236, 72, 153, 0.05) 0%, transparent 40%);
+            z-index: -1;
+            animation: pulse-bg 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse-bg {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(5deg); }
         }
 
         header {
             text-align: center;
-            margin-bottom: 4rem;
-            animation: fadeIn 0.8s ease-out;
+            margin-bottom: 5rem;
+            animation: fade-down 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 3.5rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(to right, #60a5fa, #c084fc);
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(165, 180, 252, 0.3);
         }
 
         .subhead {
             color: var(--text-muted);
-            font-size: 1.1rem;
+            font-size: 1.25rem;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         section {
-            background: var(--surface);
-            border: 1px solid var(--border);
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--surface-border);
             border-radius: var(--radius);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            animation: slideUp 0.6s ease-out backwards;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            animation: slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         section:nth-child(2) { animation-delay: 0.1s; }
@@ -73,14 +107,16 @@
         section:nth-child(5) { animation-delay: 0.4s; }
 
         h2 {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 0.5rem;
-            color: var(--text);
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            display: inline-block;
+            background: linear-gradient(90deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Patterns Cards */
+        /* Glass Cards with Glow */
         .cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -88,137 +124,203 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            padding: 1.5rem;
-            border-radius: 8px;
-            transition: transform 0.2s, background 0.2s;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 12px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
         }
 
         .card:hover {
-            transform: translateY(-2px);
-            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-5px) scale(1.02);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.2);
+        }
+
+        .card:hover::before {
+            transform: translateX(100%);
         }
 
         .card h3 {
-            font-size: 1.1rem;
-            color: var(--primary-hover);
-            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+            color: #fff;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
         }
 
-        /* Timeline / Table for Verification */
+        .card p { color: var(--text-muted); font-weight: 300; }
+
+        /* Timeline */
         .timeline {
-            border-left: 2px solid var(--border);
-            margin-left: 1rem;
-            padding-left: 2rem;
+            position: relative;
+            padding-left: 2.5rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--primary), var(--accent1), var(--accent2), transparent);
         }
 
         .timeline-item {
             position: relative;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
         }
 
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -2.35rem;
+            left: -2.85rem;
             top: 0.25rem;
-            width: 12px;
-            height: 12px;
-            background: var(--primary);
+            width: 14px;
+            height: 14px;
+            background: var(--bg-base);
+            border: 2px solid var(--primary);
             border-radius: 50%;
-            box-shadow: 0 0 0 4px var(--bg);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .timeline-item:hover::before {
+            background: var(--primary);
+            transform: scale(1.2);
         }
 
         .timeline-item h3 {
-            color: var(--text);
+            color: #fff;
+            font-size: 1.2rem;
             margin-bottom: 0.5rem;
         }
 
-        .timeline-item p {
-            color: var(--text-muted);
-        }
+        .timeline-item p { color: var(--text-muted); font-weight: 300; }
 
-        /* Results Table */
+        /* Controls */
         .controls {
             display: flex;
             gap: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             flex-wrap: wrap;
         }
 
         select, input {
-            background: var(--bg);
-            color: var(--text);
-            border: 1px solid var(--border);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-main);
+            border: 1px solid var(--surface-border);
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
             font-family: inherit;
+            font-size: 0.95rem;
             outline: none;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
         }
 
         select:focus, input:focus {
             border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
+        /* Table */
         .table-container {
             overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid var(--surface-border);
+            background: rgba(0, 0, 0, 0.2);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
+            white-space: nowrap;
         }
 
         th, td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--surface-border);
         }
 
         th {
-            background: rgba(255, 255, 255, 0.02);
-            font-weight: 600;
-            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.03);
+            font-weight: 500;
+            color: #fff;
             position: sticky;
             top: 0;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
         }
 
-        tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
+        tr {
+            transition: background 0.2s ease;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
         }
 
         a {
-            color: var(--primary-hover);
+            color: var(--primary);
             text-decoration: none;
+            transition: color 0.2s;
         }
 
         a:hover {
-            text-decoration: underline;
+            color: var(--primary-hover);
+            text-shadow: 0 0 8px var(--primary-glow);
         }
 
+        /* Badges */
         .badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.75rem;
             border-radius: 999px;
             font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .badge.warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
-        .badge.success { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-        .badge.danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .badge.warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.2); }
+        .badge.success { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
+        .badge.danger  { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
         
-        .muted { color: var(--text-muted); font-style: italic; }
+        .muted { color: var(--text-muted); font-style: italic; font-weight: 300; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .alert-box {
+            margin-top: 1.5rem; 
+            padding: 1.25rem; 
+            border-radius: 8px;
+            background: linear-gradient(to right, rgba(59, 130, 246, 0.1), transparent);
+            border-left: 4px solid var(--primary);
+            color: var(--text-muted);
+            font-weight: 300;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
+        @keyframes fade-down {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
@@ -258,8 +360,8 @@
         <p style="margin-top: 1rem;">
             <strong>GitHub Repository:</strong> <a href="https://github.com/Yashpreetg24/Composio-Assignment" target="_blank">https://github.com/Yashpreetg24/Composio-Assignment</a>
         </p>
-        <div style="margin-top: 1.5rem; padding: 1rem; border-left: 3px solid var(--primary); background: rgba(59, 130, 246, 0.1);">
-            <strong>A note on process honesty:</strong> The initial run failed on 100% of rows due to an empty Anthropic API credit balance. The pipeline caught the error gracefully. On the second run (switched to Groq), it succeeded on 95/100. The remaining 5 rows failed strict Pydantic enum validation ("unknown" instead of allowed values), which prompted the addition of a resilient retry loop.
+        <div class="alert-box">
+            <strong style="color:#fff;">A note on process honesty:</strong> The initial run failed on 100% of rows due to an empty Anthropic API credit balance. The pipeline caught the error gracefully. On the second run (switched to Groq), it succeeded on 95/100. The remaining 5 rows failed strict Pydantic enum validation ("unknown" instead of allowed values), which prompted the addition of a resilient retry loop.
         </div>
     </section>
 
