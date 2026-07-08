@@ -1,6 +1,6 @@
 requests==2.31.0
 beautifulsoup4==4.12.3
 googlesearch-python==1.2.3
-anthropic==0.116.0
+openai==1.57.4
 pydantic==2.7.4
 python-dotenv==1.0.1

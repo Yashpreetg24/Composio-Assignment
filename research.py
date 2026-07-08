@@ -5,7 +5,7 @@ from typing import Optional, Dict, Any
 import requests
 from bs4 import BeautifulSoup
 from googlesearch import search
-from anthropic import Anthropic
+from openai import OpenAI
 import os
 from dotenv import load_dotenv
 
@@ -18,7 +18,10 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 # Initialize clients
-anthropic_client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+openai_client = OpenAI(
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1"
+)
 
 def search_for_docs_url(app_name: str, hint: str) -> Optional[str]:
     """Search for the API documentation URL using DuckDuckGo."""
@@ -91,25 +94,18 @@ def analyze_with_llm(app_data: dict, docs_text: str, evidence_url: str) -> AppRe
         """ + prompt
 
     try:
-        response = anthropic_client.messages.create(
-            model="claude-3-5-sonnet-latest",
-            max_tokens=1024,
-            temperature=0,
+        response = openai_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            response_format={ "type": "json_object" },
             messages=[
                 {"role": "user", "content": prompt}
-            ]
+            ],
+            temperature=0,
+            max_tokens=1024,
         )
         
-        content = response.content[0].text.strip()
-        # Clean up any potential markdown code blocks if the model ignored instructions
-        if content.startswith("```json"):
-            content = content[7:]
-        if content.startswith("```"):
-            content = content[3:]
-        if content.endswith("```"):
-            content = content[:-3]
-            
-        data = json.loads(content.strip())
+        content = response.choices[0].message.content.strip()
+        data = json.loads(content)
         return AppResearchResult(**data)
         
     except Exception as e:

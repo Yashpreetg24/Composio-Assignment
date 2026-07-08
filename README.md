@@ -1,10 +1,10 @@
 # SaaS API Research Pipeline
 
-This is an automated research pipeline that extracts API and authentication information for a list of SaaS applications. It uses DuckDuckGo for documentation discovery and Anthropic's Claude 3.5 Sonnet for structured data extraction.
+This is an automated research pipeline that extracts API and authentication information for a list of SaaS applications. It uses DuckDuckGo for documentation discovery and Groq's Llama 3.3 70B for structured data extraction.
 
 ## Features
 - Discovers API docs via DuckDuckGo search.
-- Extracts and standardizes data using a Pydantic schema and Anthropic's LLM.
+- Extracts and standardizes data using a Pydantic schema and Groq's LLM.
 - Resilient to failures (saves intermediate results incrementally).
 - Provides a verification script to manually re-run specific apps.
 
@@ -25,7 +25,7 @@ This is an automated research pipeline that extracts API and authentication info
      ```bash
      cp .env.example .env
      ```
-   - Edit `.env` and add your `ANTHROPIC_API_KEY`.
+   - Edit `.env` and add your `GROQ_API_KEY`.
 
 ## Usage
 
