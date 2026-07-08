@@ -4,7 +4,7 @@ import time
 from typing import Optional, Dict, Any
 import requests
 from bs4 import BeautifulSoup
-from duckduckgo_search import DDGS
+from googlesearch import search
 from anthropic import Anthropic
 import os
 from dotenv import load_dotenv
@@ -19,15 +19,14 @@ logger = logging.getLogger(__name__)
 
 # Initialize clients
 anthropic_client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-ddgs = DDGS()
 
 def search_for_docs_url(app_name: str, hint: str) -> Optional[str]:
     """Search for the API documentation URL using DuckDuckGo."""
     query = f"{app_name} API developer documentation {hint}"
     try:
-        results = list(ddgs.text(query, max_results=3))
+        results = list(search(query, num_results=3))
         if results:
-            return results[0]['href']
+            return results[0]
     except Exception as e:
         logger.warning(f"Search failed for {app_name}: {e}")
     return None
