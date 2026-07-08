@@ -18,7 +18,7 @@ This is an automated research pipeline that extracts API and authentication info
    ```
 3. **Install dependencies:**
    ```bash
-   pip install -r requirements.txt
+   pip install -r backend-requirements.txt
    ```
 4. **Configure Environment Variables:**
    - Copy `.env.example` to `.env`:
