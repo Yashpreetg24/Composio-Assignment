@@ -1,3 +1,6 @@
 [build]
   command = "echo 'No build step required for static site'"
   publish = "."
+
+[build.environment]
+  PIP_REQUIREMENTS_PATH = "dummy.txt"
